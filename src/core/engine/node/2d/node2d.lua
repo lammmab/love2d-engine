@@ -50,21 +50,21 @@ function Node2D:updateGlobalTransform()
         self.global_scale = self.scale
     end
 
-    for _, child in ipairs(self.children) do
+    for _, child in ipairs(self._children) do
         child:updateGlobalTransform()
     end
 end
 
 function Node2D:update_all(dt)
-    for i=1,#self.children do
-        local child = self.children[i]
+    for i=1,#self._children do
+        local child = self._children[i]
         child:update(dt)
     end
 end
 
 function Node2D:draw_all()
-    for i=1,#self.children do
-        local child = self.children[i]
+    for i=1,#self._children do
+        local child = self._children[i]
         child:draw()
     end
 end
