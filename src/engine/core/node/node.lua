@@ -1,5 +1,12 @@
 local Node = class("Node")
 local Signals = require("lib.signals")
+local safe_env = require("lib.safe_env")
+
+local HOOKS = {
+    "_on_mount",
+    "_update",
+    "_draw",
+}
 
 function Node:init(name, is_root_node, parent, children)
     self._is_node = true
@@ -25,13 +32,7 @@ end
 
 function Node:run_script_hook(name,...)
     if self._funcs[name] then
-        self._funcs[name](self,...)
-    end
-end
-
-function Node:run_script()
-    if self._script then
-        self._script()
+        self._funcs[name](...)
     end
 end
 
@@ -39,14 +40,19 @@ function Node:set_script(path)
     self.script_path = path
     local chunk_str = assert(love.filesystem.read(path))
 
-    local env = setmetatable({}, { __index = function(_, k)
-        return self[k] or _G[k]
-    end })
+    local env = safe_env()
+    env.self = self
 
     self._script = assert(load(chunk_str, "@"..path, "t", env))
     self._script()
-    
-    self._funcs = env
+
+    for i=1,#HOOKS do
+        local hook = HOOKS[i]
+        if env[hook] then
+            self._funcs[hook] = env[hook]
+        end
+    end
+
     self:run_script_hook("_on_mount")
 end
 
@@ -122,10 +128,6 @@ function Node:traverse_down_tree(cb)
         end
     end
     return nil
-end
-
-function Node:_update()
-    -- override
 end
 
 return Node

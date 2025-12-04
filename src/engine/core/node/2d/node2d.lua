@@ -58,9 +58,13 @@ end
 function Node2D:update_all(dt)
     for i=1,#self._children do
         local child = self._children[i]
+        child:run_script_hook("_update",dt)
         if child._update then
-            self:run_script_hook("_update",dt)
             child:_update(dt)
+        end
+
+        if child.update_all then
+            child:update_all(dt)
         end
     end
 end
@@ -68,15 +72,15 @@ end
 function Node2D:draw_all()
     for i=1,#self._children do
         local child = self._children[i]
+        child:run_script_hook("_draw")
         if child._draw then
-            self:run_script_hook("_draw")
             child:_draw()
         end
-    end
-end
 
-function Node2D:_draw(dt)
-    -- Override
+        if child.draw_all then
+            child:draw_all()
+        end
+    end
 end
 
 return Node2D
