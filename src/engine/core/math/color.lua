@@ -24,7 +24,7 @@ function Color:copy()
     return Color:new(self.r,self.g,self.b,self.a)
 end
 
-function Color.__tostring()
+function Color:__tostring()
     return string.format("Color(%f, %f, %f, %f)", self.r, self.g, self.b, self.a)
 end
 

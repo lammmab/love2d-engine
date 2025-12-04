@@ -1,6 +1,6 @@
 local Shape2D = class("Shape2D", require("node.2d.node2d"))
-local Vector2 = require("math.vector2")
-local Color = require("math.color")
+local Vector2 = require("math.vector2").Vector2
+local Color = require("math.color").Color
 
 local shapes = {
     ["rectangle"] = 1,

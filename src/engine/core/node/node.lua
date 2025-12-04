@@ -1,12 +1,13 @@
 local Node = class("Node")
+local Signals = require("lib.signals")
 
 function Node:init(name, is_root_node, parent, children)
     self._is_node = true
-    self._signals = {}
+    self._signals = Signals:new()
     self._children = children or {}
 
     self.name = name or "Node"
-    self.is_root_node = is_root_node or false
+    self.is_root_node = is_root_node == true
     self.uuid = generate_uuid()
 
     if parent then
@@ -15,22 +16,7 @@ function Node:init(name, is_root_node, parent, children)
         error("Non-root nodes must have a parent node.")
     end
 
-    self:emit("_on_mount")
-end
-
-function Node:emit(name,...)
-    if not self._signals[name:lower()] then self._signals[name:lower()] = {} end
-    local sigs = self._signals[name:lower()]
-    if #sigs == 0 then print("No listeners for event " .. name:lower()) return end
-    for i=1,#sigs do
-        sigs[i](...)
-    end
-end
-
-function Node:on(name,fn)
-    if type(fn) ~= "function" then error("Argument passed to Node:on is not a function") end
-    if not self._signals[name:lower()] then self._signals[name:lower()] = {} end
-    table.insert(self._signals[name:lower()],fn)
+    self._signals:emit("_on_mount")
 end
 
 function Node:set_parent(parent)

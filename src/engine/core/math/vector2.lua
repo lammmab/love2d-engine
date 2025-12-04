@@ -9,10 +9,6 @@ function Vector2:copy()
     return Vector2:new(self.x, self.y)
 end
 
-function Vector2.__tostring()
-    return string.format("Vector2(%f, %f)", self.x, self.y)
-end
-
 function Vector2.__add(a, b)
     return Vector2:new(a.x + b.x, a.y + b.y)
 end
@@ -26,8 +22,10 @@ function Vector2.__mul(a,b)
         return Vector2:new(a * b.x, a * b.y)
     elseif type(b) == "number" then
         return Vector2:new(a.x * b, a.y * b)
+    elseif typeof(a) == "vector2" and typeof(b) == "vector2" then
+        return Vector2:new(a.x * b.x, a.y * b.y)
     else
-        error("Vector2: multiply expects vector*scalar or scalar*vector")
+        error("Vector2: multiply expects vector*scalar, scalar*vector, or vector*vector")
     end
 end
 
@@ -57,4 +55,5 @@ return {
     dot_vec2 = function(a, b) return a:dot(b) end,
     length_vec2 = function(a) return a:length() end,
     normalize_vec2 = function(a) return a:normalized() end,
+    multiply_vec2 = function (a,b) return Vector2:new(a.x * b.x, a.y * b.y) end
 }

@@ -10,7 +10,7 @@ local loaders = {
     ttf  = function(path) return love.graphics.newFont(path, 20) end,
     json = function(path)
         local data = love.filesystem.read(path)
-        return json.decode(data)
+        return Engine.JSON.decode(data)
     end
 }
 

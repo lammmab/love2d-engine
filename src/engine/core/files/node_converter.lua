@@ -1,5 +1,5 @@
 local Node = require("node.node")
-local Vector2 = require("math.vector2")
+local Vector2 = require("math.vector2").Vector2
 local NodeConverter = {}
 
 local function vec2_to_string(vec2)
@@ -37,6 +37,7 @@ local function decode(scene,tbl)
     local node_class = Engine.NodeTypes[expected_type:lower()]
 
     local parent_node = Engine.get_node_by_id(scene, tbl["parent"])
+    if not parent_node then error("Node with id " .. tostring(tbl["parent"]) .. " not found in scene " .. scene.name) end
     local node = node_class:new(tbl["name"], tbl["is_root_node"], parent_node, {})
 
     for k, v in pairs(tbl) do
@@ -92,6 +93,7 @@ function NodeConverter.encode_node(node)
 
         ::continue::
     end
+    print("Done encoding")
 
     return encoded
 end

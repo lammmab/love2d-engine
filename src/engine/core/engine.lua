@@ -1,9 +1,13 @@
 --! API !--
+local logging = require("lib.logging")
 
 local nodes = require("node.node_api")
 
+
 local color = require("math.color")
 local vector2 = require("math.vector2")
+local json = require("lib.json")
+local input_service = require("input.input")
 
 local asset_loader = require("files.asset_loader")
 --! API !--
@@ -17,7 +21,7 @@ Engine.__index = Engine
 function Engine.new(main_scene)
     local self = setmetatable({}, Engine)
 
-    self.apis = {nodes, vector2,color, asset_loader}
+    self.apis = {logging, json, nodes, vector2, color, asset_loader, input_service}
     self.scene_manager = scene_manager:new({main_scene})
 
     self:setup_apis()
